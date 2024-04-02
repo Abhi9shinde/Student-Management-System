@@ -29,7 +29,7 @@ class Student:
         lbl_title=Label(bg_lbl,bd=10,text="STUDENT MANAGEMENT SYSTEM",font=("Arial Baltic",37,"bold"),fg="teal",bg="white")
         lbl_title.place(x=0,y=0,width=1510,height=50)
 
-        #Frames
+        #Frames on GUI
         Create_frame=Frame(bg_lbl,bd=2,relief=RIDGE,bg="white")
         Create_frame.place(x=15,y=55,width=1470,height=560)
 
