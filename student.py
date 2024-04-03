@@ -1,12 +1,37 @@
 from tkinter import*
 from tkinter import ttk
 from PIL import Image,ImageTk  #To Display Images on Screen
+import mysql.connector
+from tkinter import messagebox
 
 class Student:
     def __init__(self,root):
         self.root=root
         self.root.title("STUDENT MANAGEMENT SYSTEM")
         self.root.geometry("1510x810+0+0")
+
+        self.var_studid=StringVar()
+        self.var_roll=StringVar()
+        self.var_name=StringVar()
+        self.var_dep=StringVar()
+        self.var_course=StringVar()
+        self.var_year=StringVar()
+        self.var_sem=StringVar()
+        self.var_div=StringVar()
+        self.var_gender=StringVar()
+        self.var_dob=StringVar()
+        self.var_email=StringVar()
+        self.var_phone=StringVar()
+        self.var_address=StringVar()
+        #self.teacher=StringVar()
+
+
+        
+        
+
+
+
+
  
         #uni Image
         uni_img=Image.open(r"img\uni.png")
@@ -33,7 +58,7 @@ class Student:
         Create_frame=Frame(bg_lbl,bd=2,relief=RIDGE,bg="white")
         Create_frame.place(x=15,y=55,width=1470,height=560)
 
-############################################LEFT FRAME##########################################################
+        ##########################################LEFT FRAME##########################################################
        
         Left_Data_Frame=LabelFrame(Create_frame,bd=4,relief=RIDGE,padx=3,text="Student Info",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
         Left_Data_Frame.place(x=10,y=10,width=650,height=540)
@@ -57,7 +82,7 @@ class Student:
         #Department
         lbl_Dept=Label(StudentInfo_Frame,text="Deprtment",font=("Arial",12,"bold"),bg="white")
         lbl_Dept.grid(row=0,column=0,padx=2,sticky=W)
-        Drop_Dept=ttk.Combobox(StudentInfo_Frame,font=("Arial ",12,"bold"),width=17,state="readonly")
+        Drop_Dept=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_dep,font=("Arial ",12,"bold"),width=17,state="readonly")
         Drop_Dept["value"]=("Select Deprtment","Computer Science","Information Technology","EnTC","AIDS","AIML","Mechanical")
         Drop_Dept.current(0)
         Drop_Dept.grid(row=0,column=1)
@@ -65,7 +90,7 @@ class Student:
         #Course
         lbl_Course=Label(StudentInfo_Frame,text="Course",font=("Arial",12,"bold"),bg="white")
         lbl_Course.grid(row=0,column=2,padx=3,sticky=W)
-        Drop_Course=ttk.Combobox(StudentInfo_Frame,font=("Arial ",12,"bold"),width=17,state="readonly")
+        Drop_Course=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_course,font=("Arial ",12,"bold"),width=17,state="readonly")
         Drop_Course["value"]=("Select Course","FE","SE","TE","TE")
         Drop_Course.current(0)
         Drop_Course.grid(row=0,column=3)
@@ -73,7 +98,7 @@ class Student:
         #Year
         lbl_year=Label(StudentInfo_Frame,text="Academic Year",font=("Arial",12,"bold"),bg="white")
         lbl_year.grid(row=1,column=0,padx=2,sticky=W,pady=10)
-        Drop_year=ttk.Combobox(StudentInfo_Frame,font=("Arial ",12,"bold"),width=17,state="readonly")
+        Drop_year=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_year,font=("Arial ",12,"bold"),width=17,state="readonly")
         Drop_year["value"]=("Select Academic Year","2020-21","2021-22","2022-23","2023-24")
         Drop_year.current(0)
         Drop_year.grid(row=1,column=1,pady=10)
@@ -81,7 +106,7 @@ class Student:
         #Semester
         lbl_sem=Label(StudentInfo_Frame,text="Semester",font=("Arial",12,"bold"),bg="white")
         lbl_sem.grid(row=1,column=2,padx=2,sticky=W,pady=10)
-        Drop_sem=ttk.Combobox(StudentInfo_Frame,font=("Arial ",12,"bold"),width=17,state="readonly")
+        Drop_sem=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_sem,font=("Arial ",12,"bold"),width=17,state="readonly")
         Drop_sem["value"]=("Select Semester","I","II")
         Drop_sem.current(0)
         Drop_sem.grid(row=1,column=3,pady=10)
@@ -93,31 +118,31 @@ class Student:
         lbl_student_id=Label(StudentClass_Frame,text="Student ERP ID",font=("Arial",10,"bold"),bg="white")
         lbl_student_id.grid(row=0,column=0,padx=2,sticky=W,pady=10)
 
-        id_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        id_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_studid,font=("Arial",10,"bold"),width=20)
         id_entry.grid(row=0,column=1,padx=2,sticky=W,pady=10)
         #Student Name
         lbl_student_name=Label(StudentClass_Frame,text="Student Name",font=("Arial",10,"bold"),bg="white")
         lbl_student_name.grid(row=0,column=2,padx=2,sticky=W,pady=10)
 
-        name_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        name_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_name,font=("Arial",10,"bold"),width=20)
         name_entry.grid(row=0,column=3,padx=2,sticky=W,pady=10)
         #Student Division
         lbl_student_div=Label(StudentClass_Frame,text="Division",font=("Arial",10,"bold"),bg="white")
         lbl_student_div.grid(row=1,column=0,padx=2,sticky=W,pady=10)
 
-        div_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        div_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_div,font=("Arial",10,"bold"),width=20)
         div_entry.grid(row=1,column=1,padx=2,sticky=W,pady=10)
         #Student Class Roll No
         lbl_student_roll=Label(StudentClass_Frame,text="Class Roll No.",font=("Arial",10,"bold"),bg="white")
         lbl_student_roll.grid(row=1,column=2,padx=2,sticky=W,pady=10)
 
-        roll_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        roll_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_roll,font=("Arial",10,"bold"),width=20)
         roll_entry.grid(row=1,column=3,padx=2,sticky=W,pady=10)
         #Student Gender
         lbl_student_gender=Label(StudentClass_Frame,text="Gender",font=("Arial",10,"bold"),bg="white")
         lbl_student_gender.grid(row=2,column=0,padx=2,sticky=W,pady=10)
 
-        Drop_gender=ttk.Combobox(StudentClass_Frame,font=("Arial ",10,"bold"),width=17,state="readonly")
+        Drop_gender=ttk.Combobox(StudentClass_Frame,textvariable=self.var_gender,font=("Arial ",10,"bold"),width=17,state="readonly")
         Drop_gender["value"]=("Select Gender","Male","Female","Else you don't exist")
         Drop_gender.current(0)
         Drop_gender.grid(row=2,column=1,pady=10)
@@ -125,32 +150,32 @@ class Student:
         lbl_student_dob=Label(StudentClass_Frame,text="DOB",font=("Arial",10,"bold"),bg="white")
         lbl_student_dob.grid(row=2,column=2,padx=5,sticky=W,pady=10)
 
-        dob_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        dob_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_dob,font=("Arial",10,"bold"),width=20)
         dob_entry.grid(row=2,column=3,padx=2,sticky=W,pady=10)
         #Student Email
         lbl_student_email=Label(StudentClass_Frame,text="Email",font=("Arial",10,"bold"),bg="white")
         lbl_student_email.grid(row=3,column=0,padx=5,sticky=W,pady=10)
 
-        email_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        email_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_email,font=("Arial",10,"bold"),width=20)
         email_entry.grid(row=3,column=1,padx=2,sticky=W,pady=10)
         #Student Phone
         lbl_student_phone=Label(StudentClass_Frame,text="Phone",font=("Arial",10,"bold"),bg="white")
         lbl_student_phone.grid(row=3,column=2,padx=5,sticky=W,pady=10)
 
-        phone_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        phone_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_phone,font=("Arial",10,"bold"),width=20)
         phone_entry.grid(row=3,column=3,padx=2,sticky=W,pady=10)
         #Student Address
         lbl_student_add=Label(StudentClass_Frame,text="Address",font=("Arial",10,"bold"),bg="white")
         lbl_student_add.grid(row=4,column=0,padx=5,sticky=W,pady=10)
 
-        add_entry=ttk.Entry(StudentClass_Frame,font=("Arial",10,"bold"),width=20)
+        add_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_address,font=("Arial",10,"bold"),width=20)
         add_entry.grid(row=4,column=1,padx=2,sticky=W,pady=10)
 
         #Button Frame
         btn_frame=Frame(Left_Data_Frame,bd=2,relief=RIDGE,bg="white")
         btn_frame.place(x=3,y=470,width=635,height=40)
         #ADD Button
-        add_btn=Button(btn_frame,text="ADD",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        add_btn=Button(btn_frame,text="ADD",command=self.add_data,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         add_btn.grid(row=0,column=0,padx=6)
         #UPDATE Button
         update_btn=Button(btn_frame,text="UPDATE",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
@@ -162,7 +187,7 @@ class Student:
         reset_btn=Button(btn_frame,text="RESET",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         reset_btn.grid(row=0,column=3,padx=6,pady=4)
         
-############################################RIGHT FRAME##########################################################
+        ##########################################RIGHT FRAME##########################################################
         Right_Data_Frame=LabelFrame(Create_frame,bd=4,relief=RIDGE,padx=3,text="Student Info",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
         Right_Data_Frame.place(x=680,y=10,width=775,height=540)
 
@@ -194,7 +219,7 @@ class Student:
         #scroll
         scroll=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
 
-        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Teacher","Gender","DOB","Email","Phone","Address"),xscrollcommand=scroll.set)
+        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Gender","DOB","Email","Phone","Address"),xscrollcommand=scroll.set)
         scroll.pack(side=BOTTOM,fill=X)
         scroll.config(command=self.student_tab.xview)
         
@@ -206,7 +231,7 @@ class Student:
         self.student_tab.heading("Year",text="Year")
         self.student_tab.heading("Sem",text="Sem")
         self.student_tab.heading("Div",text="Div")
-        self.student_tab.heading("Teacher",text="Teacher")
+        #self.student_tab.heading("Teacher",text="Teacher")
         self.student_tab.heading("Gender",text="Gender")
         self.student_tab.heading("DOB",text="DOB")
         self.student_tab.heading("Email",text="Email")
@@ -223,7 +248,7 @@ class Student:
         self.student_tab.column("Year",width=100)
         self.student_tab.column("Sem",width=50)
         self.student_tab.column("Div",width=50)
-        self.student_tab.column("Teacher",width=100)
+        #self.student_tab.column("Teacher",width=100)
         self.student_tab.column("Gender",width=100)
         self.student_tab.column("DOB",width=100)
         self.student_tab.column("Email",width=100)
@@ -231,6 +256,40 @@ class Student:
         self.student_tab.column("Address",width=100)
         
         self.student_tab.pack(fill=BOTH,expand=0)
+
+
+    def add_data(self):
+        if(self.var_dep.get()=="" or self.var_studid.get()=="" or self.var_email.get()==""):
+            messagebox.showerror("Error","All fields required")
+        else:
+            try:
+                connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+                my_cursor=connection.cursor()
+                my_cursor.execute("INSERT INTO stud_det VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.var_studid.get(),self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get()))
+                connection.commit()
+                connection.close()
+                messagebox.showinfo("Success","Student Added",parent=self.root)
+            except Exception as except1:
+                messagebox.showerror("Error","Error in addition")
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
