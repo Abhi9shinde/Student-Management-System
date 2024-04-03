@@ -160,11 +160,77 @@ class Student:
         delete_btn.grid(row=0,column=2,padx=6)
         #RESET Button
         reset_btn=Button(btn_frame,text="RESET",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
-        reset_btn.grid(row=0,column=3,padx=6)
+        reset_btn.grid(row=0,column=3,padx=6,pady=4)
         
 ############################################RIGHT FRAME##########################################################
         Right_Data_Frame=LabelFrame(Create_frame,bd=4,relief=RIDGE,padx=3,text="Student Info",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
-        Right_Data_Frame.place(x=680,y=10,width=770,height=540)
+        Right_Data_Frame.place(x=680,y=10,width=775,height=540)
+
+        #Search Frame
+        Search_Frame=LabelFrame(Right_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Get Student Details",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
+        Search_Frame.place(x=0,y=0,width=760,height=55)
+        #Search By
+        lbl_search_student=Label(Search_Frame,text="Search By:",font=("Arial",10,"bold"),fg="red",bg="white")
+        lbl_search_student.grid(row=0,column=0,padx=5,sticky=W )
+
+        Drop_search=ttk.Combobox(Search_Frame,font=("Arial ",10,"bold"),width=17,state="readonly")
+        Drop_search["value"]=("Select :","Student ERP ID","Roll No.","Phone no.")
+        Drop_search.current(0)
+        Drop_search.grid(row=0,column=2)
+
+        search_entry=ttk.Entry(Search_Frame,font=("Arial",10,"bold"),width=25)
+        search_entry.grid(row=0,column=3,padx=10,sticky=W)
+        #Search Button
+        Search_btn=Button(Search_Frame,text="SEARCH",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        Search_btn.grid(row=0,column=4,padx=10)
+        #Show all students
+        Showall_btn=Button(Search_Frame,text="SHOW ALL",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        Showall_btn.grid(row=0,column=5,padx=10)
+
+        #Table FRAME
+        table_frame=Frame(Right_Data_Frame,bd=4,relief=RIDGE)
+        table_frame.place(x=0,y=56,width=760,height=455)
+
+        #scroll
+        scroll=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
+
+        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Teacher","Gender","DOB","Email","Phone","Address"),xscrollcommand=scroll.set)
+        scroll.pack(side=BOTTOM,fill=X)
+        scroll.config(command=self.student_tab.xview)
+        
+        self.student_tab.heading("Student_ID",text="Student_ID")
+        self.student_tab.heading("Roll_no",text="Roll_no")
+        self.student_tab.heading("Student_name",text="Student_name")
+        self.student_tab.heading("Dept_name",text="Dept_name")
+        self.student_tab.heading("Course",text="Course")
+        self.student_tab.heading("Year",text="Year")
+        self.student_tab.heading("Sem",text="Sem")
+        self.student_tab.heading("Div",text="Div")
+        self.student_tab.heading("Teacher",text="Teacher")
+        self.student_tab.heading("Gender",text="Gender")
+        self.student_tab.heading("DOB",text="DOB")
+        self.student_tab.heading("Email",text="Email")
+        self.student_tab.heading("Phone",text="Phone")
+        self.student_tab.heading("Address",text="Address")
+
+        self.student_tab["show"]="headings"
+
+        self.student_tab.column("Student_ID",width=100)
+        self.student_tab.column("Roll_no",width=100)
+        self.student_tab.column("Student_name",width=200)
+        self.student_tab.column("Dept_name",width=150)
+        self.student_tab.column("Course",width=100)
+        self.student_tab.column("Year",width=100)
+        self.student_tab.column("Sem",width=50)
+        self.student_tab.column("Div",width=50)
+        self.student_tab.column("Teacher",width=100)
+        self.student_tab.column("Gender",width=100)
+        self.student_tab.column("DOB",width=100)
+        self.student_tab.column("Email",width=100)
+        self.student_tab.column("Phone",width=100)
+        self.student_tab.column("Address",width=100)
+        
+        self.student_tab.pack(fill=BOTH,expand=0)
 
 
 
