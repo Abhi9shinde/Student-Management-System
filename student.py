@@ -23,7 +23,7 @@ class Student:
         self.var_email=StringVar()
         self.var_phone=StringVar()
         self.var_address=StringVar()
-        #self.teacher=StringVar()
+        self.teacher=StringVar()
 
 
         
@@ -170,6 +170,12 @@ class Student:
 
         add_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_address,font=("Arial",10,"bold"),width=20)
         add_entry.grid(row=4,column=1,padx=2,sticky=W,pady=10)
+        #Teacher
+        lbl_student_id=Label(StudentClass_Frame,text="Teacher_ID",font=("Arial",10,"bold"),bg="white")
+        lbl_student_id.grid(row=4,column=2,padx=2,sticky=W,pady=10)
+
+        id_entry=ttk.Entry(StudentClass_Frame,textvariable=self.teacher,font=("Arial",10,"bold"),width=20)
+        id_entry.grid(row=4,column=3,padx=2,sticky=W,pady=10)
 
         #Button Frame
         btn_frame=Frame(Left_Data_Frame,bd=2,relief=RIDGE,bg="white")
@@ -181,10 +187,10 @@ class Student:
         update_btn=Button(btn_frame,text="UPDATE",command=self.update_data,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         update_btn.grid(row=0,column=1,padx=6)
         #DELETE Button
-        delete_btn=Button(btn_frame,text="DELETE",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        delete_btn=Button(btn_frame,text="DELETE",command=self.delete,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         delete_btn.grid(row=0,column=2,padx=6)
         #RESET Button
-        reset_btn=Button(btn_frame,text="RESET",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        reset_btn=Button(btn_frame,text="RESET",command=self.reset,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         reset_btn.grid(row=0,column=3,padx=6,pady=4)
         
         ##########################################RIGHT FRAME##########################################################
@@ -219,7 +225,7 @@ class Student:
         #scroll
         scroll=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
 
-        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Gender","DOB","Email","Phone","Address"),xscrollcommand=scroll.set)
+        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Gender","DOB","Email","Phone","Address","Teacher"),xscrollcommand=scroll.set)
         scroll.pack(side=BOTTOM,fill=X)
         scroll.config(command=self.student_tab.xview)
         
@@ -231,12 +237,12 @@ class Student:
         self.student_tab.heading("Year",text="Year")
         self.student_tab.heading("Sem",text="Sem")
         self.student_tab.heading("Div",text="Div")
-        #self.student_tab.heading("Teacher",text="Teacher")
         self.student_tab.heading("Gender",text="Gender")
         self.student_tab.heading("DOB",text="DOB")
         self.student_tab.heading("Email",text="Email")
         self.student_tab.heading("Phone",text="Phone")
         self.student_tab.heading("Address",text="Address")
+        self.student_tab.heading("Teacher",text="Teacher")
 
         self.student_tab["show"]="headings"
 
@@ -248,17 +254,26 @@ class Student:
         self.student_tab.column("Year",width=100)
         self.student_tab.column("Sem",width=50)
         self.student_tab.column("Div",width=50)
-        #self.student_tab.column("Teacher",width=100)
         self.student_tab.column("Gender",width=100)
         self.student_tab.column("DOB",width=100)
         self.student_tab.column("Email",width=200)
         self.student_tab.column("Phone",width=100)
         self.student_tab.column("Address",width=100)
+        self.student_tab.column("Teacher",width=100)
 
         
         self.student_tab.pack(fill=BOTH,expand=0)
         self.student_tab.bind("<ButtonRelease>",self.cursor)
         self.data_fetch()
+
+        #Teacher Frame
+        SearchTeacher_Frame=LabelFrame(Right_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Get Teacher Details",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
+        SearchTeacher_Frame.place(x=0,y=290,width=760,height=55)
+
+        Showall_btn=Button(SearchTeacher_Frame,text="SHOW ALL",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        Showall_btn.grid(row=0,column=6,padx=300)
+
+        
 
 
     def add_data(self):
@@ -266,22 +281,34 @@ class Student:
             messagebox.showerror("Error","All fields required")
         else:
             try:
-                connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+                connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
                 my_cursor=connection.cursor()
-                my_cursor.execute("INSERT INTO stud_det VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.var_studid.get(),self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get()))
+                my_cursor.execute("INSERT INTO stud_det VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.var_studid.get(),self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get(),self.teacher.get()))
                 connection.commit()
                 self.data_fetch()
                 connection.close()
                 messagebox.showinfo("Success","Student Added",parent=self.root)
             except Exception as except1:
-                messagebox.showerror("Error","Error in addition")
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
 
 
     #Fetch data from database
     def data_fetch(self):
-        connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+        connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
         my_cursor=connection.cursor()
         my_cursor.execute("SELECT * FROM stud_det")
+        data=my_cursor.fetchall()
+        if len(data)!=0:
+            self.student_tab.delete(*self.student_tab.get_children())
+            for i in data:
+                self.student_tab.insert("",END,values=i)
+            connection.commit()
+        connection.close()
+    
+    def data_fetch_teacher(self):
+        connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
+        my_cursor=connection.cursor()
+        my_cursor.execute("SELECT * FROM Teacher")
         data=my_cursor.fetchall()
         if len(data)!=0:
             self.student_tab.delete(*self.student_tab.get_children())
@@ -307,6 +334,7 @@ class Student:
         self.var_phone.set(data[11])
         self.var_dob.set(data[9])   
         self.var_address.set(data[12])
+        self.teacher.set(data[13])
 
     def update_data(self):
         if(self.var_dep.get()=="" or self.var_studid.get()=="" or self.var_email.get()==""):
@@ -315,9 +343,9 @@ class Student:
             try:
                 update=messagebox.askyesno("Update","Are you sure??",parent=self.root)
                 if update>0:
-                    connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+                    connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
                     my_cursor=connection.cursor()
-                    my_cursor.execute("UPDATE stud_det set Roll_No=%s,Student_Name=%s,Dept_Name=%s,Course=%s,Year=%s,Sem=%s,Division=%s,Gender=%s,DOB=%s,Email=%s,Phone=%s,Address=%s WHERE Student_id=%s",(self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get(),self.var_studid.get()))
+                    my_cursor.execute("UPDATE stud_det set Roll_No=%s,Student_Name=%s,Dept_Name=%s,Course=%s,Year=%s,Sem=%s,Division=%s,Gender=%s,DOB=%s,Email=%s,Phone=%s,Address=%s,Teach_id=%s WHERE Student_id=%s",(self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get(),self.teacher.get(),self.var_studid.get()))
                 else:
                     if not update:
                         return
@@ -328,7 +356,47 @@ class Student:
                 messagebox.showinfo("Success","Student Profile Updated successfully",parent=self.root)
 
             except Exception as except1:
-                messagebox.showerror("Error","Error in addition")
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
+
+    #DELETE RECORD
+    def delete(self):
+        if self.var_studid.get()=="":
+            messagebox.showerror("Error","All fields required")
+        else:
+            try:
+                Del=messagebox.askyesno("Delete","Delete this record??")
+                if Del>0:
+                    connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
+                    my_cursor=connection.cursor()
+                    my_cursor.execute("DELETE FROM stud_det WHERE Student_id=%s",(self.var_studid.get(),))
+                else:
+                    if not Del:
+                        return
+                connection.commit()
+                self.data_fetch()
+                connection.close()
+
+                messagebox.showinfo("Success","Record Deleted",parent=self.root)
+
+            except Exception as except1:
+                messagebox.showerror("Error","a",parent=self.root)
+    
+    def reset(self):
+        self.var_studid.set("")
+        self.var_roll.set("")
+        self.var_name.set("")
+        self.var_dep.set("Select Deaprtment")
+        self.var_course.set("Select Course")
+        self.var_div.set("")
+        self.var_year.set("Select Academic Year")
+        self.var_sem.set("Select Semester")
+        self.var_gender.set("")
+        self.var_email.set("")
+        self.var_phone.set("")
+        self.var_dob.set("")   
+        self.var_address.set("")
+        self.teacher.set("")
+
 
 
         
