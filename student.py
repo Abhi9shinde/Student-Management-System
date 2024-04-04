@@ -204,30 +204,34 @@ class Student:
         lbl_search_student=Label(Search_Frame,text="Search By:",font=("Arial",10,"bold"),fg="red",bg="white")
         lbl_search_student.grid(row=0,column=0,padx=5,sticky=W )
 
-        Drop_search=ttk.Combobox(Search_Frame,font=("Arial ",10,"bold"),width=17,state="readonly")
-        Drop_search["value"]=("Select :","Student ERP ID","Roll No.","Phone no.")
+        self.var_comsearch=StringVar()
+        Drop_search=ttk.Combobox(Search_Frame,textvariable=self.var_comsearch,font=("Arial ",10,"bold"),width=17,state="readonly")
+        Drop_search["value"]=("Select :","Student_ID","Roll_No","Phone")
         Drop_search.current(0)
         Drop_search.grid(row=0,column=2)
-
-        search_entry=ttk.Entry(Search_Frame,font=("Arial",10,"bold"),width=25)
+        self.var_search=StringVar()
+        search_entry=ttk.Entry(Search_Frame,textvariable=self.var_search,font=("Arial",10,"bold"),width=25)
         search_entry.grid(row=0,column=3,padx=10,sticky=W)
         #Search Button
-        Search_btn=Button(Search_Frame,text="SEARCH",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        Search_btn=Button(Search_Frame,text="SEARCH",command=self.search,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         Search_btn.grid(row=0,column=4,padx=10)
         #Show all students
-        Showall_btn=Button(Search_Frame,text="SHOW ALL",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        Showall_btn=Button(Search_Frame,text="SHOW ALL",command=self.data_fetch,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         Showall_btn.grid(row=0,column=5,padx=10)
 
         #Table FRAME
         table_frame=Frame(Right_Data_Frame,bd=4,relief=RIDGE)
-        table_frame.place(x=0,y=56,width=760,height=455)
+        table_frame.place(x=0,y=56,width=760,height=230)
 
         #scroll
         scroll=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
+        scroll1=ttk.Scrollbar(table_frame,orient=VERTICAL)
 
-        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Gender","DOB","Email","Phone","Address","Teacher"),xscrollcommand=scroll.set)
+        self.student_tab=ttk.Treeview(table_frame,columns=("Student_ID","Roll_no","Student_name","Dept_name","Course","Year","Sem","Div","Gender","DOB","Email","Phone","Address","Teacher"),xscrollcommand=scroll.set,yscrollcommand=scroll1.set)
         scroll.pack(side=BOTTOM,fill=X)
         scroll.config(command=self.student_tab.xview)
+        scroll1.pack(side=RIGHT,fill=Y)
+        scroll1.config(command=self.student_tab.yview)
         
         self.student_tab.heading("Student_ID",text="Student_ID")
         self.student_tab.heading("Roll_no",text="Roll_no")
@@ -265,13 +269,41 @@ class Student:
         self.student_tab.pack(fill=BOTH,expand=0)
         self.student_tab.bind("<ButtonRelease>",self.cursor)
         self.data_fetch()
-
+    ##############################################teacher detail############################################
         #Teacher Frame
-        SearchTeacher_Frame=LabelFrame(Right_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Get Teacher Details",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
+        SearchTeacher_Frame=LabelFrame(Right_Data_Frame,bd=4,relief=RIDGE,padx=300,text="Get Teacher Details",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
         SearchTeacher_Frame.place(x=0,y=290,width=760,height=55)
+        lbl_search_teacher=Label(SearchTeacher_Frame,text="Teacher Deatil",font=("Arial",15,"bold"),fg="red",bg="white")
+        lbl_search_teacher.grid(row=0,column=0,padx=5,sticky=W )
+        #Detail table
+        teachertable_frame=Frame(Right_Data_Frame,bd=4,relief=RIDGE)
+        teachertable_frame.place(x=0,y=350,width=760,height=160)
+        #scroll
+    
+        scrolly=ttk.Scrollbar(teachertable_frame,orient=VERTICAL)    
+        self.teacher_tab=ttk.Treeview(teachertable_frame,columns=("Teach_id","Teacher_Name","Education","Department","Teacher_Salary"),yscrollcommand=scrolly.set)
+        
+        scrolly.pack(side=RIGHT,fill=Y)
+        scrolly.config(command=self.teacher_tab.yview)
+        
+        self.teacher_tab.heading("Teach_id",text="Teach_id")
+        self.teacher_tab.heading("Teacher_Name",text="Teacher_Name")
+        self.teacher_tab.heading("Education",text="Education")
+        self.teacher_tab.heading("Department",text="Department")
+        self.teacher_tab.heading("Teacher_Salary",text="Teacher_Salary")
+        
 
-        Showall_btn=Button(SearchTeacher_Frame,text="SHOW ALL",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
-        Showall_btn.grid(row=0,column=6,padx=300)
+        self.teacher_tab["show"]="headings"
+
+        self.teacher_tab.column("Teach_id",width=30)
+        self.teacher_tab.column("Teacher_Name",width=100)
+        self.teacher_tab.column("Education",width=100)
+        self.teacher_tab.column("Department",width=100)
+        self.teacher_tab.column("Teacher_Salary",width=50)
+        
+        self.teacher_tab.pack(fill=BOTH,expand=0)
+        self.teacher_tab.bind("<ButtonRelease>",self.cursor)
+        self.data_fetch_teacher()
 
         
 
@@ -311,9 +343,9 @@ class Student:
         my_cursor.execute("SELECT * FROM Teacher")
         data=my_cursor.fetchall()
         if len(data)!=0:
-            self.student_tab.delete(*self.student_tab.get_children())
+            self.teacher_tab.delete(*self.teacher_tab.get_children())
             for i in data:
-                self.student_tab.insert("",END,values=i)
+                self.teacher_tab.insert("",END,values=i)
             connection.commit()
         connection.close()
 
@@ -399,33 +431,31 @@ class Student:
 
 
 
+    def search(self):
+        if self.var_comsearch.get()=="" or self.var_search.get()=="":
+            messagebox.showerror("Error","Please Enter value")
+        else:
+            try:
+                connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
+                my_cursor=connection.cursor()
+                my_cursor.execute("SELECT * FROM stud_det WHERE "+str(self.var_comsearch.get())+" = "+str(self.var_search.get()))
+                data=my_cursor.fetchall()
+                if len(data)!=0:
+                    self.student_tab.delete(*self.student_tab.get_children())
+                    for i in data:
+                        self.student_tab.insert("",END,values=i)
+                    connection.commit()
+                connection.close()
+            except Exception as except1:
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
+
+
+
+
+
+
         
         
-
-
-
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__== "__main__":
