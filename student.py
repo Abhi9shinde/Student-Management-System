@@ -178,7 +178,7 @@ class Student:
         add_btn=Button(btn_frame,text="ADD",command=self.add_data,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         add_btn.grid(row=0,column=0,padx=6)
         #UPDATE Button
-        update_btn=Button(btn_frame,text="UPDATE",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
+        update_btn=Button(btn_frame,text="UPDATE",command=self.update_data,font=("Arial",10,"bold"),width=17,bg="white",fg="black")
         update_btn.grid(row=0,column=1,padx=6)
         #DELETE Button
         delete_btn=Button(btn_frame,text="DELETE",font=("Arial",10,"bold"),width=17,bg="white",fg="black")
@@ -242,7 +242,7 @@ class Student:
 
         self.student_tab.column("Student_ID",width=100)
         self.student_tab.column("Roll_no",width=100)
-        self.student_tab.column("Student_name",width=200)
+        self.student_tab.column("Student_name",width=150)
         self.student_tab.column("Dept_name",width=150)
         self.student_tab.column("Course",width=100)
         self.student_tab.column("Year",width=100)
@@ -251,11 +251,14 @@ class Student:
         #self.student_tab.column("Teacher",width=100)
         self.student_tab.column("Gender",width=100)
         self.student_tab.column("DOB",width=100)
-        self.student_tab.column("Email",width=100)
+        self.student_tab.column("Email",width=200)
         self.student_tab.column("Phone",width=100)
         self.student_tab.column("Address",width=100)
+
         
         self.student_tab.pack(fill=BOTH,expand=0)
+        self.student_tab.bind("<ButtonRelease>",self.cursor)
+        self.data_fetch()
 
 
     def add_data(self):
@@ -267,10 +270,73 @@ class Student:
                 my_cursor=connection.cursor()
                 my_cursor.execute("INSERT INTO stud_det VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.var_studid.get(),self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get()))
                 connection.commit()
+                self.data_fetch()
                 connection.close()
                 messagebox.showinfo("Success","Student Added",parent=self.root)
             except Exception as except1:
                 messagebox.showerror("Error","Error in addition")
+
+
+    #Fetch data from database
+    def data_fetch(self):
+        connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+        my_cursor=connection.cursor()
+        my_cursor.execute("SELECT * FROM stud_det")
+        data=my_cursor.fetchall()
+        if len(data)!=0:
+            self.student_tab.delete(*self.student_tab.get_children())
+            for i in data:
+                self.student_tab.insert("",END,values=i)
+            connection.commit()
+        connection.close()
+
+    def cursor(self,event=""):
+        cursor_row=self.student_tab.focus()
+        content=self.student_tab.item(cursor_row)
+        data=content["values"]
+        self.var_studid.set(data[0])
+        self.var_roll.set(data[1])
+        self.var_name.set(data[2])
+        self.var_dep.set(data[3])
+        self.var_course.set(data[4])
+        self.var_div.set(data[7])
+        self.var_year.set(data[5])
+        self.var_sem.set(data[6])
+        self.var_gender.set(data[8])
+        self.var_email.set(data[10])
+        self.var_phone.set(data[11])
+        self.var_dob.set(data[9])   
+        self.var_address.set(data[12])
+
+    def update_data(self):
+        if(self.var_dep.get()=="" or self.var_studid.get()=="" or self.var_email.get()==""):
+            messagebox.showerror("Error","All fields required")
+        else:
+            try:
+                update=messagebox.askyesno("Update","Are you sure??",parent=self.root)
+                if update>0:
+                    connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student")
+                    my_cursor=connection.cursor()
+                    my_cursor.execute("UPDATE stud_det set Roll_No=%s,Student_Name=%s,Dept_Name=%s,Course=%s,Year=%s,Sem=%s,Division=%s,Gender=%s,DOB=%s,Email=%s,Phone=%s,Address=%s WHERE Student_id=%s",(self.var_roll.get(),self.var_name.get(),self.var_dep.get(),self.var_course.get(),self.var_year.get(),self.var_sem.get(),self.var_div.get(),self.var_gender.get(),self.var_dob.get(),self.var_email.get(),self.var_phone.get(),self.var_address.get(),self.var_studid.get()))
+                else:
+                    if not update:
+                        return
+                connection.commit()
+                self.data_fetch()
+                connection.close()
+
+                messagebox.showinfo("Success","Student Profile Updated successfully",parent=self.root)
+
+            except Exception as except1:
+                messagebox.showerror("Error","Error in addition")
+
+
+        
+        
+
+
+
+
 
     
     
