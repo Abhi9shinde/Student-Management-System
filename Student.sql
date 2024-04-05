@@ -7,5 +7,6 @@ ALTER TABLE stud_det ADD FOREIGN KEY(Teach_id) REFERENCES Teacher(Teach_id);
 INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (1,"Abhinav","Btech","IT","50000");
 INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (2,"Anjali","Mtech","CS","80000");
 INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (3,"Laxman","Mtech","ECE","100000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (4,"Swati","Btech","IT","190000");
 SELECT * FROM Stud_det;
 SHOW TABLES;
