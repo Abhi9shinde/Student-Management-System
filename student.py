@@ -8,7 +8,7 @@ class Student:
     def __init__(self,root):
         self.root=root
         self.root.title("STUDENT MANAGEMENT SYSTEM")
-        self.root.geometry("1510x810+0+0")
+        self.root.geometry("1530x810+0+0")
 
         self.var_studid=StringVar()
         self.var_roll=StringVar()
