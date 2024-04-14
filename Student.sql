@@ -10,4 +10,4 @@ INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) V
 INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (4,"Mr.Avinash Kupte","Btech","IT","190000");
 INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (5,"Mr.Raj Kale","BE","EnTC","90000");
 SELECT * FROM Stud_det;
-SHOW TABLES;
+SHOW TABLES; 
