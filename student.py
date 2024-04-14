@@ -83,7 +83,7 @@ class Student:
         lbl_Dept=Label(StudentInfo_Frame,text="Deprtment",font=("Arial",12,"bold"),bg="white")
         lbl_Dept.grid(row=0,column=0,padx=2,sticky=W)
         Drop_Dept=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_dep,font=("Arial ",12,"bold"),width=17,state="readonly")
-        Drop_Dept["value"]=("Select Deprtment","Computer Science","Information Technology","EnTC","AIDS","AIML","Mechanical")
+        Drop_Dept["value"]=("Select Department","Computer Science","Information Technology","EnTC","AIDS","AIML","Mechanical")
         Drop_Dept.current(0)
         Drop_Dept.grid(row=0,column=1)
 
@@ -143,7 +143,7 @@ class Student:
         lbl_student_gender.grid(row=2,column=0,padx=2,sticky=W,pady=10)
 
         Drop_gender=ttk.Combobox(StudentClass_Frame,textvariable=self.var_gender,font=("Arial ",10,"bold"),width=17,state="readonly")
-        Drop_gender["value"]=("Select Gender","Male","Female","Else you don't exist")
+        Drop_gender["value"]=("Select Gender","Male","Female")
         Drop_gender.current(0)
         Drop_gender.grid(row=2,column=1,pady=10)
         #Student Date of Birth
@@ -269,11 +269,11 @@ class Student:
         self.student_tab.pack(fill=BOTH,expand=0)
         self.student_tab.bind("<ButtonRelease>",self.cursor)
         self.data_fetch()
-    ##############################################teacher detail############################################
+    ##############################################Teacher detail############################################
         #Teacher Frame
         SearchTeacher_Frame=LabelFrame(Right_Data_Frame,bd=4,relief=RIDGE,padx=300,text="Get Teacher Details",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
         SearchTeacher_Frame.place(x=0,y=290,width=760,height=55)
-        lbl_search_teacher=Label(SearchTeacher_Frame,text="Teacher Deatil",font=("Arial",15,"bold"),fg="red",bg="white")
+        lbl_search_teacher=Label(SearchTeacher_Frame,text="Teacher Detail",font=("Arial",15,"bold"),fg="red",bg="white")
         lbl_search_teacher.grid(row=0,column=0,padx=5,sticky=W )
         #Detail table
         teachertable_frame=Frame(Right_Data_Frame,bd=4,relief=RIDGE)
