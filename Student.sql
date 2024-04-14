@@ -4,9 +4,10 @@ CREATE TABLE Stud_det(Student_id INT,Roll_No VARCHAR(50),Student_Name VARCHAR(50
 CREATE TABLE Teacher(Teach_id INT,Teacher_Name VARCHAR(50),Education VARCHAR(50),Department VARCHAR(50),Teacher_Salary VARCHAR(50),PRIMARY KEY(Teach_id));
 ALTER TABLE Stud_det ADD COLUMN Teach_id INT;
 ALTER TABLE stud_det ADD FOREIGN KEY(Teach_id) REFERENCES Teacher(Teach_id);
-INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (1,"Abhinav","Btech","IT","50000");
-INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (2,"Anjali","Mtech","CS","80000");
-INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (3,"Laxman","Mtech","ECE","100000");
-INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (4,"Swati","Btech","IT","190000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (1,"Mr.Sahil Jadhav","Btech","IT","50000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (2,"Mrs.Anjali Raut","Mtech","CS","80000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (3,"Mrs.Saee Jadhav","Mtech","ECE","100000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (4,"Mr.Avinash Kupte","Btech","IT","190000");
+INSERT INTO Teacher(Teach_id,Teacher_Name,Education,Department,Teacher_Salary) VALUES (5,"Mr.Raj Kale","BE","EnTC","90000");
 SELECT * FROM Stud_det;
 SHOW TABLES;
