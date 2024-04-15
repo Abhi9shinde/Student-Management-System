@@ -112,7 +112,7 @@ class Student:
         Drop_sem.current(0)
         Drop_sem.grid(row=1,column=3,pady=10)
 
-        self.add_dept_btn = Button(Create_frame, text="Add Department", command=self.add_department)
+        self.add_dept_btn = Button(Create_frame, text="Add New Department", command=self.add_department)
         self.add_dept_btn.place(x=270, y=235, width=150, height=30)
 
         #Student Class Frame in Left Frame
@@ -449,7 +449,7 @@ class Student:
         self.var_div.set("")
         self.var_year.set("Select Academic Year")
         self.var_sem.set("Select Semester")
-        self.var_gender.set("")
+        self.var_gender.set("Select Gender")
         self.var_email.set("")
         self.var_phone.set("")
         self.var_dob.set("")   
