@@ -3,12 +3,13 @@ from tkinter import ttk
 from PIL import Image,ImageTk  #To Display Images on Screen
 import mysql.connector
 from tkinter import messagebox
+from tkinter import simpledialog
 
 class Student:
-    def __init__(self,root):
-        self.root=root
-        self.root.title("STUDENT MANAGEMENT SYSTEM")
-        self.root.geometry("1530x810+0+0")
+    def __init__(self,loroot):
+        self.loroot=loroot
+        self.loroot.title("STUDENT MANAGEMENT SYSTEM")
+        self.loroot.geometry("1530x810+0+0")
 
         self.var_studid=StringVar()
         self.var_roll=StringVar()
@@ -38,7 +39,7 @@ class Student:
         uni_img=uni_img.resize((540,160),Image.ANTIALIAS)
         self.photouni_img=ImageTk.PhotoImage(uni_img)
 
-        self.btn2=Button(self.root,image=self.photouni_img,cursor="hand2")
+        self.btn2=Button(self.loroot,image=self.photouni_img,cursor="hand2")
         self.btn2.place(x=500,y=0,width=540,height=160)
 
         #for Background Image
@@ -46,7 +47,7 @@ class Student:
         img=img.resize((1510,840),Image.ANTIALIAS)
         self.photoimg=ImageTk.PhotoImage(img)
         
-        bg_lbl=Label(self.root,image=self.photoimg,bd=2,relief=RIDGE)
+        bg_lbl=Label(self.loroot,image=self.photoimg,bd=2,relief=RIDGE)
         bg_lbl.place(x=0,y=160,width=1510,height=840)
 
 
@@ -77,21 +78,21 @@ class Student:
 
         #Current course Info Frame in Left Frame
         StudentInfo_Frame=LabelFrame(Left_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Current Course Info",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
-        StudentInfo_Frame.place(x=0,y=120,width=630,height=115)
+        StudentInfo_Frame.place(x=0,y=120,width=630,height=120)
 
         #Department
-        lbl_Dept=Label(StudentInfo_Frame,text="Deprtment",font=("Arial",12,"bold"),bg="white")
+        lbl_Dept=Label(StudentInfo_Frame,text="Department",font=("Arial",12,"bold"),bg="white")
         lbl_Dept.grid(row=0,column=0,padx=2,sticky=W)
-        Drop_Dept=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_dep,font=("Arial ",12,"bold"),width=17,state="readonly")
-        Drop_Dept["value"]=("Select Department","Computer Science","Information Technology","EnTC","AIDS","AIML","Mechanical")
-        Drop_Dept.current(0)
-        Drop_Dept.grid(row=0,column=1)
+        self.Drop_Dept = ttk.Combobox(StudentInfo_Frame, textvariable=self.var_dep, font=("Arial ", 12, "bold"), width=17, state="readonly")
+        self.Drop_Dept["value"] = ("Select Department")
+        self.Drop_Dept.current(0)
+        self.Drop_Dept.grid(row=0, column=1)
 
         #Course
         lbl_Course=Label(StudentInfo_Frame,text="Course",font=("Arial",12,"bold"),bg="white")
         lbl_Course.grid(row=0,column=2,padx=3,sticky=W)
         Drop_Course=ttk.Combobox(StudentInfo_Frame,textvariable=self.var_course,font=("Arial ",12,"bold"),width=17,state="readonly")
-        Drop_Course["value"]=("Select Course","FE","SE","TE","TE")
+        Drop_Course["value"]=("Select Course","FE","SE","TE","BE")
         Drop_Course.current(0)
         Drop_Course.grid(row=0,column=3)
 
@@ -110,6 +111,9 @@ class Student:
         Drop_sem["value"]=("Select Semester","I","II")
         Drop_sem.current(0)
         Drop_sem.grid(row=1,column=3,pady=10)
+
+        self.add_dept_btn = Button(Create_frame, text="Add Department", command=self.add_department)
+        self.add_dept_btn.place(x=270, y=235, width=150, height=30)
 
         #Student Class Frame in Left Frame
         StudentClass_Frame=LabelFrame(Left_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Student Class Information",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
@@ -147,7 +151,7 @@ class Student:
         Drop_gender.current(0)
         Drop_gender.grid(row=2,column=1,pady=10)
         #Student Date of Birth
-        lbl_student_dob=Label(StudentClass_Frame,text="DOB",font=("Arial",10,"bold"),bg="white")
+        lbl_student_dob=Label(StudentClass_Frame,text="DOB(YYYY-MM-DD)",font=("Arial",10,"bold"),bg="white")
         lbl_student_dob.grid(row=2,column=2,padx=5,sticky=W,pady=10)
 
         dob_entry=ttk.Entry(StudentClass_Frame,textvariable=self.var_dob,font=("Arial",10,"bold"),width=20)
@@ -319,9 +323,9 @@ class Student:
                 connection.commit()
                 self.data_fetch()
                 connection.close()
-                messagebox.showinfo("Success","Student Added",parent=self.root)
+                messagebox.showinfo("Success","Student Added",parent=self.loroot)
             except Exception as except1:
-                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.loroot)
 
 
     #Fetch data from database
@@ -348,6 +352,29 @@ class Student:
                 self.teacher_tab.insert("",END,values=i)
             connection.commit()
         connection.close()
+    def add_department(self):
+        new_department = simpledialog.askstring("Add Department", "Enter new department name:")
+        if new_department:
+            try:
+                connection = mysql.connector.connect(host="localhost", username="root", password="Abhi9shinde@2004", database="student2")
+                my_cursor = connection.cursor()
+                # Check if the department already exists
+                my_cursor.execute("SELECT Dept_Name FROM departments WHERE Dept_Name = %s", (new_department,))
+                existing_department = my_cursor.fetchone()
+                if existing_department:
+                    messagebox.showerror("Error", "Department already exists")
+                else:
+                    # Insert the new department into the database
+                    my_cursor.execute("INSERT INTO departments (Dept_Name) VALUES (%s)", (new_department,))
+                    connection.commit()
+                    # Refresh the department combobox
+                    my_cursor.execute("SELECT Dept_Name FROM departments")
+                    departments = ["Select Department"] + [dept[0] for dept in my_cursor.fetchall()]
+                    self.Drop_Dept["values"] = departments
+                    self.Drop_Dept.current(0)
+                    messagebox.showinfo("Success", "Department added successfully")
+            except Exception as except1:
+                messagebox.showerror("Error", f"Reason: {str(except1)}", parent=self.loroot)
 
     def cursor(self,event=""):
         cursor_row=self.student_tab.focus()
@@ -373,7 +400,7 @@ class Student:
             messagebox.showerror("Error","All fields required")
         else:
             try:
-                update=messagebox.askyesno("Update","Are you sure??",parent=self.root)
+                update=messagebox.askyesno("Update","Are you sure??",parent=self.loroot)
                 if update>0:
                     connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
                     my_cursor=connection.cursor()
@@ -385,10 +412,10 @@ class Student:
                 self.data_fetch()
                 connection.close()
 
-                messagebox.showinfo("Success","Student Profile Updated successfully",parent=self.root)
+                messagebox.showinfo("Success","Student Profile Updated successfully",parent=self.loroot)
 
             except Exception as except1:
-                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.loroot)
 
     #DELETE RECORD
     def delete(self):
@@ -408,10 +435,10 @@ class Student:
                 self.data_fetch()
                 connection.close()
 
-                messagebox.showinfo("Success","Record Deleted",parent=self.root)
+                messagebox.showinfo("Success","Record Deleted",parent=self.loroot)
 
             except Exception as except1:
-                messagebox.showerror("Error","a",parent=self.root)
+                messagebox.showerror("Error","a",parent=self.loroot)
     
     def reset(self):
         self.var_studid.set("")
@@ -447,7 +474,7 @@ class Student:
                     connection.commit()
                 connection.close()
             except Exception as except1:
-                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.root)
+                messagebox.showerror("Error",f"Reason:{str(except1)}",parent=self.loroot)
 
 
 
@@ -459,6 +486,6 @@ class Student:
 
 
 if __name__== "__main__":
-    root=Tk()
-    obj=Student(root)
-    root.mainloop()
+    loroot=Tk()
+    obj=Student(loroot)
+    loroot.mainloop()
