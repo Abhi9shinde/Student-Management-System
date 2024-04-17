@@ -1,6 +1,16 @@
-<h1>STUDENT DATABASE MANAGEMENT SYSTEM using Python and MySql.</h1>
-<h2>Performs task like getting student details and adding it into mysql database also added facility to update and delete the record</h2>
-<h2>Used 2 Tables: 1] Teacher Table   2]Student Table</h2>
-<h3>This is how the system looks</h3>
+# STUDENT DATABASE MANAGEMENT SYSTEM using Python and MySql.
+## The project aims to develop a Student Management System utilizing Python and MySQL to streamline student data management processes, improving efficiency, accessibility, and data security within educational institutions.
+## Tables Used: 
+* Teacher Table
+* Student Table
+* Department Table
 
-![Screenshot 2024-04-06 232158](https://github.com/Abhi9shinde/Student-Management-System/assets/143414991/8e4161f8-6769-4e82-a0e3-eee05cad289b)
+## This is how the system looks
+### First we have a login page
+![Screenshot 2024-04-18 003245](https://github.com/Abhi9shinde/Student-Management-System/assets/143414991/e68393df-3623-40ba-b7ef-d0365f827dcd)
+### After Authenticating , user will get access to the Student Management System
+![Screenshot 2024-04-18 003519](https://github.com/Abhi9shinde/Student-Management-System/assets/143414991/d4ab743d-9a88-4425-91e9-56630cb153ff)
+
+## User can ADD, DELETE, UPDATE and SEARCH a student from the database
+## Additional functionality to add new department
+## Here all the fields follow proper validations
