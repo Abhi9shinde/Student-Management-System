@@ -25,6 +25,9 @@ class Student:
         self.var_phone=StringVar()
         self.var_address=StringVar()
         self.teacher=StringVar()
+        
+
+        
 
 
         
@@ -79,7 +82,7 @@ class Student:
         #Current course Info Frame in Left Frame
         StudentInfo_Frame=LabelFrame(Left_Data_Frame,bd=4,relief=RIDGE,padx=3,text="Current Course Info",font=("Arial Baltic",12,"bold"),fg="red",bg="white")
         StudentInfo_Frame.place(x=0,y=120,width=630,height=120)
-
+        
         #Department
         lbl_Dept=Label(StudentInfo_Frame,text="Department",font=("Arial",12,"bold"),bg="white")
         lbl_Dept.grid(row=0,column=0,padx=2,sticky=W)
@@ -87,6 +90,7 @@ class Student:
         self.Drop_Dept["value"] = ("Select Department")
         self.Drop_Dept.current(0)
         self.Drop_Dept.grid(row=0, column=1)
+        self.fetchdep()
 
         #Course
         lbl_Course=Label(StudentInfo_Frame,text="Course",font=("Arial",12,"bold"),bg="white")
@@ -341,6 +345,20 @@ class Student:
             connection.commit()
         connection.close()
     
+    def fetchdep(self):
+        try:
+            connection = mysql.connector.connect(host="localhost", username="root", password="Abhi9shinde@2004", database="student2")
+            my_cursor = connection.cursor()
+            my_cursor.execute("SELECT Dept_Name FROM departments")
+            departments = ["Select Department"] + [dept[0] for dept in my_cursor.fetchall()]
+            self.Drop_Dept["values"] = departments
+            self.Drop_Dept.current(0)
+        except Exception as except1:
+            messagebox.showerror("Error", f"Reason: {str(except1)}", parent=self.loroot)
+
+
+    
+    
     def data_fetch_teacher(self):
         connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
         my_cursor=connection.cursor()
@@ -373,6 +391,7 @@ class Student:
                     self.Drop_Dept["values"] = departments
                     self.Drop_Dept.current(0)
                     messagebox.showinfo("Success", "Department added successfully")
+                    self.loroot.focus_force()
             except Exception as except1:
                 messagebox.showerror("Error", f"Reason: {str(except1)}", parent=self.loroot)
 
@@ -423,6 +442,7 @@ class Student:
             messagebox.showerror("Error","All fields required")
         else:
             try:
+                self.loroot.focus_force()
                 Del=messagebox.askyesno("Delete","Delete this record??")
                 if Del>0:
                     connection=mysql.connector.connect(host="localhost",username="root",password="Abhi9shinde@2004",database="student2")
@@ -436,6 +456,7 @@ class Student:
                 connection.close()
 
                 messagebox.showinfo("Success","Record Deleted",parent=self.loroot)
+                self.loroot.focus_force()
 
             except Exception as except1:
                 messagebox.showerror("Error","a",parent=self.loroot)
