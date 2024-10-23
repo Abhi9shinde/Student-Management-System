@@ -345,6 +345,7 @@ class Student:
             connection.commit()
         connection.close()
     
+    
     def fetchdep(self):
         try:
             connection = mysql.connector.connect(host="localhost", username="root", password="Abhi9shinde@2004", database="student2")
